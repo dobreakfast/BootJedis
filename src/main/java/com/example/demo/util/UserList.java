@@ -35,9 +35,8 @@ public class UserList {
         j = new Jedis("localhost");
         User u;
         List<String> s = j.lrange("User",0,j.llen("User")-1);
-        String[] strings;
         for (int i = 0; i < s.size(); i++) {
-            strings = s.get(i).split(",");
+            String[] strings = s.get(i).split(",");
             if (Integer.parseInt(strings[0])==id){
                 u = new User(Integer.parseInt(strings[0]),strings[1],strings[2]);
                 return u;
@@ -54,10 +53,9 @@ public class UserList {
     public static long delUser(int id){
         j = new Jedis("localhost");
         List<String> s = j.lrange("User",0,j.llen("User")-1);
-        String[] strings;
         long num=0;
         for (int i = 0; i < s.size(); i++) {
-            strings = s.get(i).split(",");
+            String[] strings = s.get(i).split(",");
             if (Integer.parseInt(strings[0])==id){
                 num = j.lrem("User",1,s.get(i));
             }
@@ -73,7 +71,7 @@ public class UserList {
     public static long addUser(User u){
         j = new Jedis("localhost");
         long num =0;
-        if (UserList.byIdGetUser(u.getId()).equals("用户不存在")){
+        if (UserList.byIdGetUser(u.getId()).getName() == null){
             num = j.rpush("User",u.getId()+","+u.getName()+","+u.getPwd());
         }else {
             System.out.println("用户已存在");
@@ -133,9 +131,8 @@ public class UserList {
                 throw new IllegalStateException("Unexpected value: " + numType+"，传递的参数未在switch内");
         }
         List<MESUser> bookList = new ArrayList<>();
-        String[] strings;
         for (String s1 :s){
-            strings = s1.split(",");
+            String[] strings = s1.split(",");
             bookList.add(new MESUser(strings[0],strings[1],strings[2]));
         }
         j.close();
