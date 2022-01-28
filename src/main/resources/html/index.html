@@ -1,0 +1,119 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+<style>
+    .tr1
+    {
+        background-color:skyblue;
+        }
+        td
+        {
+            width:10%;
+            }
+    tr:hover{
+        background-color: cornflowerblue;
+    }
+</style>
+</head>
+<script src="jquery-3.6.0.min.js" ></script>
+<body>
+<img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg1.baidu.com%2Fit%2Fu%3D3788606852%2C2363382091%26fm%3D253%26app%3D120%26f%3DJPEG%3Fw%3D800%26h%3D800&refer=http%3A%2F%2Fimg1.baidu.com&app=2002&size=w300&q=a80&n=0&g=0n&fmt=jpeg?sec=1645261776&t=904300a9b8c8ba1bd56e00f2c41696bb" />
+    <button onclick="add()">新增</button>
+    <table id="tab" style="width:70%;margin-left:15%;text-align:center;" border="1px solid black" cellpadding=0  cellspacing=0>
+        <tr style="background-color: black;color: white;">
+            <td>ID</td>
+            <td>名字</td>
+            <td>入职时间</td>
+            <td>操作</td>
+        </tr>
+    </table>
+    <script>
+        window.οnlοad=function(){
+
+        //js代码请求
+
+        }
+    $(function(){
+        $.ajax({
+            method:"post",
+            url:"http://localhost:8080/UserAll/getAll",/*这里要写nginx访问的全路径*/
+            data:{},
+            dataType: "json",
+            success: function(data){
+                var str="";
+                $.each(data,function(i,items){
+                    str += "<tr>";
+                    str += "<td>"+items.id+"</td>";
+                    str += "<td>"+items.name+"</td>";
+                    str += "<td>"+items.data+"</td>";
+                    str += "<td>"+"<button onclick=del("+items.id+")>删除</button>"+
+                    "<button onclick=up("+items.id+")>修改</button></td>";
+                    str += "</tr>";
+                    // str+=""+"ID："+items.id+"   ";
+                    // str+=""+"姓名："+items.name+"   ";
+                    // str+=""+"密码："+items.data+"   ";
+                    // str += "<button onclick=del("+items.id+")>删除</button>"+
+                    // "<button onclick=up("+items.id+")>修改</button>"+"<br/ >";
+                });
+                str+="";
+                $("#tab").append(str);
+            }
+        });
+    })
+    function del(delId){
+        $.ajax({
+                method:"POST",
+                url:"http://localhost:8080/UserAll/delUser",/*这里要写nginx访问的全路径*/
+                data:{id: delId},
+                dataType: "json",
+                success: function(data){
+                    alert(data);
+                    self.location='index.html';
+            }
+        })
+    }
+
+    function up(upId){
+        $.ajax({
+                method:"POST",
+                url:"http://localhost:8080/UserAll/upUser",/*这里要写nginx访问的全路径*/
+                data:{id: upId},
+                dataType: "json",
+                success: function(data){
+                    alert(data);
+                    self.location='index.html';
+            }
+        })
+    }
+
+    function add(){
+        self.location='add.html';
+    }
+// //2
+// window.οnlοad=function(){undefined
+// //js代码请求
+// }
+// $(function(){undefined
+// $.ajax({undefined
+// method:"post",
+// url:"http://localhost:81/getpersons",/*这里要写nginx访问的全路径*/
+// data:{},
+// success: function(data){undefined
+// alert(data);
+// //将json数据转换
+// dd=eval("("+data+")");
+// var htmls;
+// for(var i=0;i
+// htmls="
+// +"+"id: "+dd[i].id+"+"+"name :"+dd[i].name+"+";
+// $("#a1").append(htmls);
+// }
+// }
+// });
+// })
+    </script>
+</body>
+</html>

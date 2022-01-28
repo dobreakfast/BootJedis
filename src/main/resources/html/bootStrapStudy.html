@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="jquery-3.6.0.min.js" ></script>
+    <style>
+        #tr-jo{
+            background-color: oldlace;
+        }
+        td{
+            width:10%;
+        }
+        .del-tr:hover{
+            background-color: rgb(182, 220, 252);
+        }
+    </style>
+</head>
+<body>
+    <div style="text-align: center;">
+        <button onclick="byTypeSel('one')" id="one" class="btn-a">one</button>
+        <button onclick="byTypeSel('two')" id="two" class="btn-a">Two</button>
+        <button onclick="byTypeSel('three')" id="three" class="btn-a">Three</button>
+    </div>
+    <table id="tab" style="width:70%;margin-left:15%;text-align:center;" border="1px solid black" cellpadding=0  cellspacing=0>
+        <tr style="background-color: rgb(95, 65, 65);color: white;" id="tr-a">
+            <td>ID</td>
+            <td>名字</td>
+            <td>入职时间</td>
+            <td>操作</td>
+        </tr>
+    </table>
+    <table id="tab2" style="width:70%;margin-left:15%;text-align:center;" border="1px solid black" cellpadding=0  cellspacing=0>
+        <tr style="background-color: rgb(95, 65, 65);color: white;" id="tr-a">
+            <td>ID</td>
+            <td>名字</td>
+            <td>入职时间</td>
+            <td>操作</td>
+        </tr>
+    </table>
+    <a href="#">按时吃</a>
+    <script>
+        window.οnlοad=byTypeSel('one');
+        function byTypeSel(numType){
+            
+            var jo=0;
+            $(".btn-a").css("backgroundColor","red");
+            document.getElementById(numType).style.backgroundColor="skyblue";
+            $(".del-tr").remove();
+            $.ajax({
+                method:"POST",
+                url:"http://localhost:8080/Ajax/getUser/"+numType,/*这里要写nginx访问的全路径*/
+                data:{numType: numType},
+                dataType: "json",
+                success: function(data){
+                    var str="";
+                    $.each(data,function(i,items){
+                        jo++;
+                        if(jo%2==0){
+                            str += "<tr class='del-tr' id='tr-jo'>";
+                        }else{
+                            str += "<tr class='del-tr'>";
+                        }
+                        str += "<td>"+items.id+"</td>";
+                        str += "<td>"+items.name+"</td>";
+                        str += "<td>"+items.data+"</td>";
+                        str += "<td>"+"<button onclick=del("+items.id+")>删除</button>"+
+                        "<button onclick=up("+items.id+")>修改</button></td>";
+                        str += "</tr>";
+                    });
+                    str+="";
+                    $("#tab").append(str);
+                }
+            });
+
+            $.ajax({
+                method:"POST",
+                url:"http://localhost:8080/UserAll/getAll",/*这里要写nginx访问的全路径*/
+                dataType: "json",
+                success: function(data){
+                    var str="";
+                    $.each(data,function(i,items){
+                        jo++;
+                        if(jo%2==0){
+                            str += "<tr class='del-tr' id='tr-jo'>";
+                        }else{
+                            str += "<tr class='del-tr'>";
+                        }
+                        str += "<td>"+items.id+"</td>";
+                        str += "<td>"+items.name+"</td>";
+                        str += "<td>"+items.data+"</td>";
+                        str += "<td>"+"<button onclick=del("+items.id+")>删除</button>"+
+                        "<button onclick=up("+items.id+")>修改</button></td>";
+                        str += "</tr>";
+                    });
+                    str+="";
+                    $("#tab2").append(str);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

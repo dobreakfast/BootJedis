@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form>
+        账号：<input type="text" name="name" id="name" /><br>
+        密码：<input type="password" name="pwd" id="pwd" /><br>
+        <input type="button" onclick="addUser()" value="新增" />
+    </form>
+    <script>
+        function addUser(){
+            alert("a")
+            var name1 = document.getElementById("name").value;
+            var pwd2 = document.getElementById("pwd").value;
+            $.ajax({
+                method:"post",
+                url:"http://localhost:8080/UserAll/addUser",/*这里要写nginx访问的全路径*/
+                data:{name: name1,pwd: pwd2},
+                dataType: "json",
+                success: function(data){
+                    alert(data.msg);
+                    if(data.msg == "成功"){
+                        self.location='index.html';
+                    }else{
+                        alert(data.msg);
+                        self.location='login.html';
+                    }
+            }
+        });
+        }
+    </script>
+</body>
+</html>
