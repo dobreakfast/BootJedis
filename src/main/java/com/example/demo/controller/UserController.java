@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.pojo.User;
 import com.example.demo.util.Msg;
 import com.example.demo.util.ResultUtil;
+import com.example.demo.util.UserList;
 import com.sun.deploy.net.HttpResponse;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -11,8 +12,6 @@ import redis.clients.jedis.Jedis;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 @RequestMapping("/user")
@@ -51,8 +50,11 @@ public class UserController {
         return ResultUtil.error(-202, "账号未注册");
     }
 
-    @RequestMapping("/down")
-    public void down(HttpResponse response) throws MalformedURLException {
-
+    /**
+     * 关闭Jedis
+     */
+    @RequestMapping(value = "/goOut",method = RequestMethod.GET)
+    public void down() {
+        UserList.closeJedis();
     }
 }

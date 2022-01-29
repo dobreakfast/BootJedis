@@ -9,21 +9,19 @@ import java.util.List;
 
 public class UserList {
 
-    private static Jedis j;
+    private static final Jedis j = new Jedis("localhost");
+
     /**
      * 查全部
      * @return
      */
     public static List<MESUser> t(){
-        j = new Jedis("localhost");
         List<String> s = j.lrange("MESUser",0,j.llen("MESUser")-1);
         List<MESUser> bookList = new ArrayList<>();
-        String[] strings;
         for (String s1 :s){
-            strings = s1.split(",");
+            String[] strings = s1.split(",");
             bookList.add(new MESUser(strings[0],strings[1],strings[2]));
         }
-        j.close();
         return bookList;
     }
     /**
@@ -32,7 +30,6 @@ public class UserList {
      * @return
      */
     public static User byIdGetUser(int id){
-        j = new Jedis("localhost");
         User u;
         List<String> s = j.lrange("User",0,j.llen("User")-1);
         for (int i = 0; i < s.size(); i++) {
@@ -42,7 +39,6 @@ public class UserList {
                 return u;
             }
         }
-        j.close();
         return new User();
     }
     /**
@@ -51,7 +47,6 @@ public class UserList {
      * @return
      */
     public static long delUser(int id){
-        j = new Jedis("localhost");
         List<String> s = j.lrange("User",0,j.llen("User")-1);
         long num=0;
         for (int i = 0; i < s.size(); i++) {
@@ -60,7 +55,6 @@ public class UserList {
                 num = j.lrem("User",1,s.get(i));
             }
         }
-        j.close();
         return num;
     }
     /**
@@ -69,15 +63,12 @@ public class UserList {
      * @return
      */
     public static long addUser(User u){
-        j = new Jedis("localhost");
         long num =0;
         if (UserList.byIdGetUser(u.getId()).getName() == null){
             num = j.rpush("User",u.getId()+","+u.getName()+","+u.getPwd());
         }else {
             System.out.println("用户已存在");
         }
-
-        j.close();
         return num;
     }
     /**
@@ -85,12 +76,9 @@ public class UserList {
      * @return
      */
     public static long getLastId(){
-        j = new Jedis("localhost");
         List<String> s = j.lrange("User",0,j.llen("User")-1);
         String[] ss =s.get(Math.toIntExact((j.llen("User") - 1))).split(",");
-        long id= Long.parseLong(ss[0]);
-        j.close();
-        return id;
+        return Long.parseLong(ss[0]);
     }
 
     /**
@@ -99,7 +87,6 @@ public class UserList {
      * @return
      */
     public static List<MESUser> byNumTypeGetAll(String numType){
-        j = new Jedis("localhost");
         List<String> s ;
         long size = j.llen("MESUser")-1;
         switch (numType){
@@ -135,8 +122,11 @@ public class UserList {
             String[] strings = s1.split(",");
             bookList.add(new MESUser(strings[0],strings[1],strings[2]));
         }
-        j.close();
         return bookList;
+    }
+
+    public static void closeJedis(){
+        j.close();
     }
 
     public static void main(String[] args) {
@@ -144,15 +134,15 @@ public class UserList {
         //UserList.delUser(2);
 
         //查全部
-//        List<MESUser> u = UserList.t();
-//        for (MESUser uu :u){
-//            System.out.println(uu.getId()+", "+uu.getName());
-//        }
-        //异步查询
-        List<MESUser> us = UserList.byNumTypeGetAll("all");
-        for (MESUser u : us){
-            System.out.println(u.getId()+" , "+u.getName());
+        List<MESUser> u = UserList.t();
+        for (MESUser uu :u){
+            System.out.println(uu.getId()+", "+uu.getName());
         }
+        //异步查询
+//        List<MESUser> us = UserList.byNumTypeGetAll("all");
+//        for (MESUser u : us){
+//            System.out.println(u.getId()+" , "+u.getName());
+//        }
 
 //        j = new Jedis("localhost");
 //        List<String> s = j.lrange("User",0,j.llen("User")-1);
