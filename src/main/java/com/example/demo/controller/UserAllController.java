@@ -19,12 +19,11 @@ import java.util.List;
 public class UserAllController {
     /**
      * User查全部
-     * @param request
      * @param response
      * @return
      */
     @RequestMapping(value = "/getAll",method = RequestMethod.POST)
-    public List<MESUser> getAll(HttpServletRequest request, HttpServletResponse response){
+    public List<MESUser> getAll(HttpServletResponse response){
         response.setHeader("Access-Control-Allow-Origin","*");
         System.out.println("接口已被调用");
         return UserList.t();

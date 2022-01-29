@@ -19,7 +19,7 @@ public class AjaxController {
      * @param response
      * @return
      */
-    @RequestMapping(value = "/getUser/{numType}",method = RequestMethod.POST)
+    @RequestMapping(value = "/getUser/{numType}",method = RequestMethod.GET)
     public List<MESUser> getOne(@PathVariable(value = "numType",
             required = false)String numType, HttpServletResponse response){
         response.setHeader("Access-Control-Allow-Origin","*");
